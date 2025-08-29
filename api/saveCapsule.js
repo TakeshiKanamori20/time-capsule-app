@@ -7,9 +7,10 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 module.exports = async (req, res) => {
   try {
-    const { id, email, unlock_time, encrypted_msg } = req.body;
 
-    if (!id || !email || !unlock_time || !encrypted_msg) {
+    const { email, unlock_time, encrypted_msg } = req.body;
+
+    if (!email || !unlock_time || !encrypted_msg) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -17,9 +18,8 @@ module.exports = async (req, res) => {
       .from('capsules')
       .insert([
         {
-          id,
           email,
-          unlock_time,
+          unlock_time: new Date(unlock_time * 1000).toISOString(),
           encrypted_msg,
           sent: false,
           created_at: new Date().toISOString(),
