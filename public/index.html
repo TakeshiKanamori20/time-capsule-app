@@ -16,40 +16,47 @@
       <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="Time Capsule" style="width:180px; border-radius:12px; margin-bottom:16px;">
       <h1>Time Capsule</h1>
       <div style="margin-bottom:18px; color:#444; font-size:1.1rem;">
-        未来の自分へ、今の思いを刻みませんか？<br>
-        少しの間、鍵をかけて閉まっておきましょう。<br>
-        メッセージをBlockchain上に安全に保存し、指定された時期にお届けします。<br>
-        使い方は自由です。<br>
-        <br>
-        ・小さなこと、大きなこと。<br>
-        ・Positiveなこと、Negativeなこと。<br>
-        ・挑戦に集中するために、少しの間、大事に閉まっておく素敵な思い出<br>
-        ・乗り越えるために忘れたい、でもいつかは向き合わないといけない出来事<br>
-        ・未熟な罪と伝わり切らなかった謝罪。今は平穏な日々でも、再び向き合う宿命を感じる出来事<br>
-        <br>毎週金曜夕方にメールでリマインドします。
-        <br>あなたの心の支え、気づきにお役に立てますように。
+  今の思いを、未来の自分に刻みませんか？<br>
+  少しの間、寝かせておきたい思い、ありませんか？<br>
+  メッセージはBlockchain上に安全に保存し、あなたが指定した時期にお返します。<br>
+　<br>
+  使い方は自由です。<br>
+　<br>
+  ただ一つだけ。<br>
+　<br>
+  その時が来るまで、再びメッセージを見ることは出来ません。<br>
+  <br>
+  ・小さなこと、大きなこと。<br>
+  ・Positiveなこと、Negativeなこと。<br>
+  ・挑戦に集中する間は、大事に閉まっておきたい素敵な思い出<br>
+  ・乗り越えるために忘れたい、でもいつかは向き合わないといけない出来事<br>
+  ・未熟な罪と、伝わり切らなかった謝罪。再び向き合うべき宿命を感じる出来事<br>
+  <br>あなたの心の支え、気づきにお役に立てますように。
       </div>
       <button id="startBtn" style="padding:10px 32px; font-size:1.1rem; background:#1976d2; color:#fff; border:none; border-radius:6px; cursor:pointer;">はじめる</button>
     </div>
     <!-- 刻印画面（初期は非表示） -->
     <div id="form-screen" class="container">
       <div id="intro-message" style="margin-bottom: 16px; color: #555; font-size: 1rem;">
-        このサービスは無料です。Blockchain（Polygon）を利用しますが、無料テストネット（Amoy）を使います。テスト用トークン（単位：POL）が必要ですが、取得方法もご案内します。安心してご利用ください。
+        このサービスは無料です。Blockchain（Polygon）の無料テストネット（Amoy）を使います。テスト用トークン（単位：POL）が必要ですが、取得方法もご案内します。安心してご利用ください。
       </div>
       <div id="info" style="margin-bottom:1em; color:#444; font-size:0.95em;">
         <strong>ご利用案内：</strong><br>
         <span style="color:#d32f2f;">【重要】PCのGoogle Chrome（またはChromium系）＋MetaMask拡張機能が必須です。<br>
         スマホやChrome以外のブラウザは非対応。PCのみ。<br>
         MetaMaskのChrome拡張機能を事前にインストールし、ログインしてからご利用ください。</span><br>
-        このサービスは無料テストネット（PolygonのAmoy）で動作します。<br>
-        <ul style="margin:0 0 0 1em; padding:0;">
-          <li>最初に無料配布（Faucet、といいます）に申し込みPOLを獲得します。（<a href="https://faucet.polygon.technology/" target="_blank">Polygon Faucet</a>）で獲得してください（1回で0.1 POL、数十回分）。</li>
-          <li>1回の刻印で消費するPOLはごく少量（0.01 POL未満）です。</li>
+                <ul style="margin:0 0 0 1em; padding:0;">
+          <li>最初に無料配布（Faucet、といいます）に申し込みPOLを獲得します。リンク（<a href="https://faucet.polygon.technology/" target="_blank">Polygon Faucet</a>）から獲得出来ます（当ツールで数十回利用に相当（1回で約0.1 POL消費））。</li>
+          <!-- <li>1回の刻印で消費するPOLはごく少量（0.01 POL未満）です。</li> -->
           <li>残高が不足したら、再度Faucetして、POLを無料取得できます。</li>
         </ul>
         <span style="color:#888;">MetaMaskでAmoyネットワークを選択してご利用ください。</span>
       </div>
       <button id="connectBtn">MetaMask接続</button>
+        <div id="metamask-guide" style="margin:8px 0 16px 0; color:#1976d2; font-size:0.98em;">
+          MetaMaskの接続確認画面で『Vercel』と表示されますが、これは当サービスがVercel上で動作しているためです。<br>
+          安心して、接続や確認を選んでください。
+        </div>
       <form id="capsuleForm">
         <label for="email">メールアドレス</label>
         <input type="email" id="email" required>
@@ -68,7 +75,13 @@
             <button type="submit" id="submitBtn">ブロックチェーンに刻む</button>
 
         <hr>
-        <h2>カプセル復号フォーム（初心者向け）</h2>
+        <h2>カプセル復号フォーム</h2>
+        <!--
+        <div style="color:#1976d2; font-size:0.98em; margin-bottom:8px;">
+          <strong>※通常は指定日時に届くメールから復号してください。</strong><br>
+          万が一メールが届かない場合は、こちらで手動復号できます。<br>
+          メール記載のID・暗号化メッセージ・パスワードを入力してください。
+        </div>
         <div id="decryptSection">
           <label for="decryptCapsuleId">カプセルID:</label>
           <input type="text" id="decryptCapsuleId" placeholder="メール記載のID" />
@@ -82,6 +95,7 @@
           <button id="decryptBtn" type="button">復号する</button>
           <div id="decryptResult" style="margin-top:10px;color:green;"></div>
         </div>
+        -->
     <div id="capsuleIdNotice" style="margin-top:12px; color:#1976d2; font-weight:bold;"></div>
       </form>
       <div id="status"></div>
@@ -90,6 +104,9 @@
   <div id="txLink" style="margin-top:8px;"></div>
       <hr style="margin:24px 0;">
       <div style="margin-bottom:8px; color:#555; font-size:1em;">カプセルを開封する</div>
+      <div style="color:#1976d2; font-size:0.98em; margin-bottom:8px;">
+        <strong>※指定日時に届くメールから、カプセルIDとパスワードで復号できます。逆に言えば、その時まで開くことが出来ません。</strong><br>
+      </div>
       <div style="display:flex; flex-direction:column; gap:8px; max-width:340px;">
         <label for="capsuleId">カプセルID</label>
         <input type="number" id="capsuleId" min="0" placeholder="例: 0">
