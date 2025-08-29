@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <style>
+    #form-screen { display: none; }
+  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Capsule — 未来の自分へ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+  <body>
+  <main>
+    <!-- 扉画面（初期表示） -->
+    <div id="door-screen" class="container" style="text-align:center;">
+      <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="Time Capsule" style="width:180px; border-radius:12px; margin-bottom:16px;">
+      <h1>Time Capsule</h1>
+      <div style="margin-bottom:18px; color:#444; font-size:1.1rem;">
+        未来の自分へ、今の思いを刻みませんか？<br>
+        少しの間、鍵をかけて閉まっておきましょう。<br>
+        メッセージをBlockchain上に安全に保存し、指定された時期にお届けします。<br>
+        使い方は自由です。<br>
+        <br>
+        ・小さなこと、大きなこと。<br>
+        ・Positiveなこと、Negativeなこと。<br>
+        ・挑戦に集中するために、少しの間、大事に閉まっておく素敵な思い出<br>
+        ・乗り越えるために忘れたい、でもいつかは向き合わないといけない出来事<br>
+        ・未熟な罪と伝わり切らなかった謝罪。今は平穏な日々でも、再び向き合う宿命を感じる出来事<br>
+        <br>毎週金曜夕方にメールでリマインドします。
+        <br>あなたの心の支え、気づきにお役に立てますように。
+      </div>
+      <button id="startBtn" style="padding:10px 32px; font-size:1.1rem; background:#1976d2; color:#fff; border:none; border-radius:6px; cursor:pointer;">はじめる</button>
+    </div>
+    <!-- 刻印画面（初期は非表示） -->
+    <div id="form-screen" class="container">
+      <div id="intro-message" style="margin-bottom: 16px; color: #555; font-size: 1rem;">
+        このサービスは無料です。Blockchain（Polygon）を利用しますが、無料テストネット（Amoy）を使います。テスト用トークン（単位：POL）が必要ですが、取得方法もご案内します。安心してご利用ください。
+      </div>
+      <div id="info" style="margin-bottom:1em; color:#444; font-size:0.95em;">
+        <strong>ご利用案内：</strong><br>
+        <span style="color:#d32f2f;">【重要】PCのGoogle Chrome（またはChromium系）＋MetaMask拡張機能が必須です。<br>
+        スマホやChrome以外のブラウザは非対応。PCのみ。<br>
+        MetaMaskのChrome拡張機能を事前にインストールし、ログインしてからご利用ください。</span><br>
+        このサービスは無料テストネット（PolygonのAmoy）で動作します。<br>
+        <ul style="margin:0 0 0 1em; padding:0;">
+          <li>最初に無料配布（Faucet、といいます）に申し込みPOLを獲得します。（<a href="https://faucet.polygon.technology/" target="_blank">Polygon Faucet</a>）で獲得してください（1回で0.1 POL、数十回分）。</li>
+          <li>1回の刻印で消費するPOLはごく少量（0.01 POL未満）です。</li>
+          <li>残高が不足したら、再度Faucetして、POLを無料取得できます。</li>
+        </ul>
+        <span style="color:#888;">MetaMaskでAmoyネットワークを選択してご利用ください。</span>
+      </div>
+      <button id="connectBtn">MetaMask接続</button>
+      <form id="capsuleForm">
+        <label for="email">メールアドレス</label>
+        <input type="email" id="email" required>
+        <label for="plaintext">今日のあなたから、未来のあなたへ</label>
+        <textarea id="plaintext" rows="4" maxlength="500" required></textarea>
+        <label for="months">開封までの期間（月）</label>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="number" id="months" min="0" max="24" value="0" required style="width:80px;">か月
+            <input type="number" id="days" min="0" max="30" value="1" required style="width:80px;">日
+          </div>
+          <div style="color:#888; font-size:0.95em; margin-bottom:8px;">開封までの期間は「0～24か月、0～30日」の整数のみ指定できます。テストネットは長期保存保証がありません。2年以内を推奨します。</div>
+    <label for="password">暗号化パスワード</label>
+    <input type="password" id="password" minlength="4" maxlength="32" required placeholder="パスワード（4文字以上）">
+    <div style="color:#d32f2f; font-size:0.95em; margin-bottom:8px;">※パスワードは復元時に必須です。紛失しないよう安全に保管してください（英数字・記号、4～32文字）。</div>
+        <button type="submit" id="submitBtn">ブロックチェーンに刻む</button>
+    <div id="capsuleIdNotice" style="margin-top:12px; color:#1976d2; font-weight:bold;"></div>
+      </form>
+      <div id="status"></div>
+      <div id="result-message" style="margin-top: 16px; color: #1976d2; font-weight: bold;"></div>
+      <div id="completion-message" style="margin-top: 16px; color: #333; font-size: 1.1rem; display: none;"></div>
+  <div id="txLink" style="margin-top:8px;"></div>
+      <hr style="margin:24px 0;">
+      <div style="margin-bottom:8px; color:#555; font-size:1em;">カプセルを開封する</div>
+      <div style="display:flex; flex-direction:column; gap:8px; max-width:340px;">
+        <label for="capsuleId">カプセルID</label>
+        <input type="number" id="capsuleId" min="0" placeholder="例: 0">
+        <label for="unlockPassword">パスワード（暗号化時と同じ）</label>
+        <input type="password" id="unlockPassword" minlength="4" maxlength="32" placeholder="パスワード">
+        <button id="getBtn" type="button">カプセル取得・開封</button>
+        <div id="getResult" style="margin-top:12px; color:#1976d2; font-weight:bold;"></div>
+      </div>
+    </div>
+  </main>
+  <script>
+    // SPA画面切り替え
+    document.getElementById('form-screen').style.display = 'none';
+    document.getElementById('startBtn').onclick = function() {
+      document.getElementById('door-screen').style.display = 'none';
+      document.getElementById('form-screen').style.display = 'block';
+    };
+    // 完了時のメッセージ表示処理
+    function showCompletionMessage() {
+      const msg = document.getElementById('completion-message');
+      msg.innerHTML = `\uD83C\uDF89 お疲れさまでした！<br>あなたのメッセージは未来の自分へ安全に保存されました。<br>メールもご確認ください。<br>POLが足りなくなった場合は、再度取得できます。`;
+      msg.style.display = 'block';
+    }
+    window.showCompletionMessage = showCompletionMessage;
+  </script>
+<script src="https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script src="main.js"></script>
+<!-- CryptoJS AES 暗号化用CDN -->
+<script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+</body>
+</html>

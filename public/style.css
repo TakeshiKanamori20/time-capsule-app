@@ -1,0 +1,57 @@
+body {
+  font-family: sans-serif;
+  background: #f7f7fa;
+  color: #222;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  }
+main {
+  max-width: 400px;
+  margin: 2em auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 2em;
+}
+h1 {
+  font-size: 1.5em;
+  margin-bottom: 1em;
+  text-align: center;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+input, textarea, button {
+  font-size: 1em;
+  padding: 0.7em;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+button {
+  background: #4f8ef7;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+#status {
+  margin-top: 1em;
+  color: #4f8ef7;
+  font-weight: bold;
+}
+#txLink {
+  margin-top: 0.5em;
+}
+.note {
+  font-size: 0.9em;
+  color: #888;
+  margin-top: 2em;
+  text-align: center;
+}
