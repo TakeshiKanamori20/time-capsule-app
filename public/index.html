@@ -55,16 +55,33 @@
         <input type="email" id="email" required>
         <label for="plaintext">今日のあなたから、未来のあなたへ</label>
         <textarea id="plaintext" rows="4" maxlength="500" required></textarea>
-        <label for="months">開封までの期間（月）</label>
+        <label for="months">開封までの期間（月・日・分）</label>
           <div style="display:flex; gap:8px; align-items:center;">
             <input type="number" id="months" min="0" max="24" value="0" required style="width:80px;">か月
-            <input type="number" id="days" min="0" max="30" value="1" required style="width:80px;">日
+            <input type="number" id="days" min="0" max="30" value="0" required style="width:80px;">日
+            <input type="number" id="minutes" min="0" max="1440" value="1" required style="width:80px;">分
           </div>
-          <div style="color:#888; font-size:0.95em; margin-bottom:8px;">開封までの期間は「0～24か月、0～30日」の整数のみ指定できます。テストネットは長期保存保証がありません。2年以内を推奨します。</div>
-    <label for="password">暗号化パスワード</label>
-    <input type="password" id="password" minlength="4" maxlength="32" required placeholder="パスワード（4文字以上）">
-    <div style="color:#d32f2f; font-size:0.95em; margin-bottom:8px;">※パスワードは復元時に必須です。紛失しないよう安全に保管してください（英数字・記号、4～32文字）。</div>
-        <button type="submit" id="submitBtn">ブロックチェーンに刻む</button>
+          <div style="color:#888; font-size:0.95em; margin-bottom:8px;">開封までの期間は「0～24か月、0～30日、0～1440分」の整数で自由に指定できます。合計1分以上であればOKです。テストネットは長期保存保証がありません。2年以内を推奨します。</div>
+        <label for="password">暗号化パスワード</label>
+        <input type="password" id="password" minlength="4" maxlength="32" required placeholder="パスワード（4文字以上）">
+        <div style="color:#d32f2f; font-size:0.95em; margin-bottom:8px;">※パスワードは復元時に必須です。紛失しないよう安全に保管してください（英数字・記号、4～32文字）。</div>
+            <button type="submit" id="submitBtn">ブロックチェーンに刻む</button>
+
+        <hr>
+        <h2>カプセル復号フォーム（初心者向け）</h2>
+        <div id="decryptSection">
+          <label for="decryptCapsuleId">カプセルID:</label>
+          <input type="text" id="decryptCapsuleId" placeholder="メール記載のID" />
+          <br>
+          <label for="decryptEncryptedMsg">暗号化メッセージ:</label>
+          <textarea id="decryptEncryptedMsg" rows="3" placeholder="メール記載の暗号化文字列"></textarea>
+          <br>
+          <label for="decryptPassword">パスワード:</label>
+          <input type="password" id="decryptPassword" placeholder="保存時のパスワード" />
+          <br>
+          <button id="decryptBtn" type="button">復号する</button>
+          <div id="decryptResult" style="margin-top:10px;color:green;"></div>
+        </div>
     <div id="capsuleIdNotice" style="margin-top:12px; color:#1976d2; font-weight:bold;"></div>
       </form>
       <div id="status"></div>

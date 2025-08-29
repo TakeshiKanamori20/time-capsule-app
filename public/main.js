@@ -1,3 +1,27 @@
+// 復号フォームのロジック
+document.getElementById('decryptBtn').onclick = function() {
+  const encryptedMsg = document.getElementById('decryptEncryptedMsg').value;
+  const password = document.getElementById('decryptPassword').value;
+  const resultDiv = document.getElementById('decryptResult');
+  if (!encryptedMsg || !password) {
+    resultDiv.style.color = 'red';
+    resultDiv.textContent = '暗号化メッセージとパスワードを入力してください。';
+    return;
+  }
+  try {
+    const decrypted = CryptoJS.AES.decrypt(encryptedMsg, password).toString(CryptoJS.enc.Utf8);
+    if (!decrypted) {
+      resultDiv.style.color = 'red';
+      resultDiv.textContent = '復号に失敗しました。パスワードや暗号化文字列を再確認してください。';
+    } else {
+      resultDiv.style.color = 'green';
+      resultDiv.textContent = '復号結果: ' + decrypted;
+    }
+  } catch (e) {
+    resultDiv.style.color = 'red';
+    resultDiv.textContent = 'エラー: ' + (e.message || e);
+  }
+};
 const contractAddress = "0x7c6cb4b75fa468118cc6626484cde800dfcab6eb";
 const chain = "amoy";
 const explorerUrls = {
@@ -54,10 +78,7 @@ connectBtn.onclick = async () => {
 
 form.onsubmit = async (e) => {
   e.preventDefault();
-  submitBtn.disabled = true;
   statusDiv.textContent = "送信中...";
-  txLinkDiv.textContent = "";
-  document.getElementById("capsuleIdNotice").textContent = "";
   if (!contract) {
     statusDiv.textContent = "MetaMask接続後に送信してください";
     submitBtn.disabled = false;
@@ -66,24 +87,45 @@ form.onsubmit = async (e) => {
   try {
     const email = document.getElementById("email").value;
     const plaintext = document.getElementById("plaintext").value;
+    // Supabase保存API呼び出し関数
+    async function saveCapsuleToSupabase(capsule) {
+      try {
+        const response = await fetch('/api/saveCapsule', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(capsule),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || '保存失敗');
+        return result;
+      } catch (e) {
+        console.error('Supabase保存エラー:', e);
+        return null;
+      }
+    }
     const monthsVal = document.getElementById("months").value;
     const daysVal = document.getElementById("days").value;
+    const minutesVal = document.getElementById("minutes").value;
     const months = Number(monthsVal);
     const days = Number(daysVal);
-          // 整数バリデーションとゼロチェック
-          if (!Number.isInteger(months) || !Number.isInteger(days) || months < 0 || days < 0) {
-            statusDiv.textContent = "開封までの期間は整数のみ指定してください";
-            submitBtn.disabled = false;
-            return;
-          }
-          if (months === 0 && days === 0) {
-            statusDiv.textContent = "開封までの期間は1日以上にしてください";
-            submitBtn.disabled = false;
-            return;
-          }
+    const minutes = Number(minutesVal);
+    // 整数バリデーションと下限チェック
+    if (!Number.isInteger(months) || !Number.isInteger(days) || !Number.isInteger(minutes) || months < 0 || days < 0 || minutes < 0) {
+      statusDiv.textContent = "開封までの期間は整数のみ指定してください";
+      submitBtn.disabled = false;
+      return;
+    }
+    const totalMinutes = months * 30 * 24 * 60 + days * 24 * 60 + minutes;
+    if (totalMinutes < 1) {
+      statusDiv.textContent = "開封までの期間は1分以上にしてください";
+      submitBtn.disabled = false;
+      return;
+    }
+    // 月・日・分を秒換算
     const password = document.getElementById("password").value;
     // 月＋日を秒換算
-    const unlockAt = Math.floor(Date.now() / 1000) + ((months * 30 + days) * 24 * 60 * 60);
     if (!password) {
       statusDiv.textContent = "パスワードを入力してください";
       submitBtn.disabled = false;
@@ -103,6 +145,19 @@ form.onsubmit = async (e) => {
     if (capsuleId !== null) {
       document.getElementById("capsuleIdNotice").textContent = `カプセルID: ${capsuleId}（必ずメモしてください。メールでもお送りします）`;
     }
+      // 例: カプセル作成時にSupabaseへ保存
+      const capsule = {
+        id: capsuleId, // UUID
+        email: email,
+        unlock_time: unlockAt, // ISO文字列
+        encrypted_msg: encrypted,
+      };
+      const result = await saveCapsuleToSupabase(capsule);
+      if (!result || result.error) {
+        statusDiv.textContent = `カプセル保存に失敗しました: ${result && result.error ? result.error : 'ネットワークや入力内容をご確認ください。'}`;
+        submitBtn.disabled = false;
+        return;
+      }
     statusDiv.textContent = "刻印しました。メールをご確認ください";
     const txUrl = explorerUrls[chain] + tx.hash;
     txLinkDiv.innerHTML = `<a href="${txUrl}" target="_blank">取引を見る</a>`;
