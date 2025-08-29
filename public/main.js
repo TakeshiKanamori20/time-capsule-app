@@ -1,27 +1,3 @@
-// 復号フォームのロジック
-document.getElementById('decryptBtn').onclick = function() {
-  const encryptedMsg = document.getElementById('decryptEncryptedMsg').value;
-  const password = document.getElementById('decryptPassword').value;
-  const resultDiv = document.getElementById('decryptResult');
-  if (!encryptedMsg || !password) {
-    resultDiv.style.color = 'red';
-    resultDiv.textContent = '暗号化メッセージとパスワードを入力してください。';
-    return;
-  }
-  try {
-    const decrypted = CryptoJS.AES.decrypt(encryptedMsg, password).toString(CryptoJS.enc.Utf8);
-    if (!decrypted) {
-      resultDiv.style.color = 'red';
-      resultDiv.textContent = '復号に失敗しました。パスワードや暗号化文字列を再確認してください。';
-    } else {
-      resultDiv.style.color = 'green';
-      resultDiv.textContent = '復号結果: ' + decrypted;
-    }
-  } catch (e) {
-    resultDiv.style.color = 'red';
-    resultDiv.textContent = 'エラー: ' + (e.message || e);
-  }
-};
 const contractAddress = "0x7c6cb4b75fa468118cc6626484cde800dfcab6eb";
 const chain = "amoy";
 const explorerUrls = {
@@ -68,8 +44,9 @@ connectBtn.onclick = async () => {
       provider = new ethers.providers.Web3Provider(window.ethereum);
       signer = await provider.getSigner();
     }
-    contract = new ethers.Contract(contractAddress, abi, signer);
-    statusDiv.textContent = "MetaMask接続済み";
+  contract = new ethers.Contract(contractAddress, abi, signer);
+  const address = await signer.getAddress();
+  statusDiv.textContent = `MetaMask接続済み: ${address}`;
   } catch (err) {
     statusDiv.textContent = "MetaMask接続に失敗しました: " + (err.message || err);
   }
@@ -169,6 +146,8 @@ form.onsubmit = async (e) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, encrypted, unlockAt, txUrl, capsuleId })
     });
+    // 完了メッセージ表示（SPA画面切り替えは行わない）
+    if (window.showCompletionMessage) window.showCompletionMessage();
   } catch (err) {
     statusDiv.textContent = "エラー: " + (err.message || err);
   }
