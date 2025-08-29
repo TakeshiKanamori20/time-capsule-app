@@ -123,6 +123,8 @@ form.onsubmit = async (e) => {
       submitBtn.disabled = false;
       return;
     }
+  // 月・日・分を秒換算
+  const unlockAt = Math.floor(Date.now() / 1000) + totalMinutes * 60;
     // 月・日・分を秒換算
     const password = document.getElementById("password").value;
     // 月＋日を秒換算
