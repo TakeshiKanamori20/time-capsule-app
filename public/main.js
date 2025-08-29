@@ -46,7 +46,7 @@ connectBtn.onclick = async () => {
     }
   contract = new ethers.Contract(contractAddress, abi, signer);
   const address = await signer.getAddress();
-  statusDiv.textContent = `MetaMask接続済み: ${address}`;
+  document.getElementById("metamaskStatus").textContent = `MetaMask接続済み: ${address}`;
   } catch (err) {
     statusDiv.textContent = "MetaMask接続に失敗しました: " + (err.message || err);
   }

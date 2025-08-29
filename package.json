@@ -1,0 +1,23 @@
+{
+  "name": "time-capsule",
+  "version": "1.0.0",
+  "description": "**プロダクト名**：Time Capsule — 未来の自分へ（テストネット刻印＋メール控え）",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TakeshiKanamori20/time-capsule-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TakeshiKanamori20/time-capsule-app/issues"
+  },
+  "homepage": "https://github.com/TakeshiKanamori20/time-capsule-app#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.56.1"
+  }
+}
