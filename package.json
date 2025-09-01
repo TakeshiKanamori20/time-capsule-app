@@ -17,6 +17,7 @@
     "url": "https://github.com/TakeshiKanamori20/time-capsule-app/issues"
   },
   "homepage": "https://github.com/TakeshiKanamori20/time-capsule-app#readme",
+  "type": "module",
   "dependencies": {
     "@supabase/supabase-js": "^2.56.1",
     "axios": "^1.11.0"
