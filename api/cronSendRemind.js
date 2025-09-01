@@ -32,6 +32,7 @@ export default async function handler(req, res) {
         .eq('id', capsule.id);
     } catch (e) {
       console.error(`Failed to send for capsule ${capsule.id}:`, e.message);
+      // 送信失敗時はsentをTRUEにしない
     }
   }
 
