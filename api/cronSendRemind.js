@@ -20,16 +20,16 @@ module.exports = async (req, res) => {
     try {
       await axios.post(process.env.SEND_EMAIL_API_URL, {
         email: capsule.email,
-        encrypted_msg: capsule.encrypted_msg,
-        unlock_time: capsule.unlock_time,
-        id: capsule.id,
+        encrypted: capsule.encrypted_msg,
+        unlockAt: capsule.unlock_time,
+        txUrl: capsule.tx_url, // 必要ならSupabaseに保存されている場合のみ
+        capsuleId: capsule.id,
       });
       await supabase
         .from('capsules')
         .update({ sent: true })
         .eq('id', capsule.id);
     } catch (e) {
-      // エラー時はログのみ
       console.error(`Failed to send for capsule ${capsule.id}:`, e.message);
     }
   }
