@@ -6,16 +6,15 @@ export default async function handler(req, res) {
     res.status(405).end();
     return;
   }
-  console.log('Request body:', req.body); // ←ここでリクエスト内容を表示
-  const { email, encrypted, unlockAt, txUrl, capsuleId } = req.body;
-  if (!email || !encrypted || !unlockAt || !txUrl || !capsuleId) {
-    console.error('Missing fields:', { email, encrypted, unlockAt, txUrl, capsuleId }); // ←追加
+  console.log('Request body:', req.body);
+  const { email, encrypted, unlockAt, txUrl, serialId } = req.body;
+  if (!email || !encrypted || !unlockAt || !txUrl || !serialId) {
+    console.error('Missing fields:', { email, encrypted, unlockAt, txUrl, serialId });
     res.status(400).json({ error: "Missing fields" });
     return;
   }
-  // Resend API
   const subject = `Time Capsule: ${new Date(unlockAt * 1000).toLocaleDateString()}に開封予定`;
-  const body = `あなたの手紙の控えです\n\nカプセルID: ${capsuleId}（復元時に必須です。必ず保管してください）\n暗号化メッセージ: ${encrypted}\n\n解錠予定: ${new Date(unlockAt * 1000).toLocaleString()}\nTx: ${txUrl}`;
+  const body = `あなたの手紙の控えです\n\nカプセルID: ${serialId}（復元時に必須です。必ず保管してください）\n暗号化メッセージ: ${encrypted}\n\n解錠予定: ${new Date(unlockAt * 1000).toLocaleString()}\nTx: ${txUrl}`;
   try {
     const resp = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -24,14 +23,14 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        from: "takeshi.kanamori@tkocean.net", // ←送り元アドレスを修正
+        from: "takeshi.kanamori@tkocean.net",
         to: email,
         subject,
         text: body
       })
     });
     if (!resp.ok) {
-      const errorText = await resp.text(); // エラー詳細を取得
+      const errorText = await resp.text();
       throw new Error("Resend API error: " + errorText);
     }
     res.status(200).json({ ok: true });

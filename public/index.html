@@ -131,6 +131,18 @@
       msg.style.display = 'block';
     }
     window.showCompletionMessage = showCompletionMessage;
+
+    document.getElementById('getBtn').onclick = async function() {
+  const serialId = document.getElementById('capsuleId').value; // serial_idとして取得
+  const password = document.getElementById('unlockPassword').value;
+  const response = await fetch('/api/getCapsule', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ serialId, password }) // serialIdでAPIに渡す
+  });
+  const result = await response.json();
+  document.getElementById('getResult').textContent = result.error || result.encrypted_msg || '';
+};
   </script>
 <script src="https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 <script src="main.js"></script>

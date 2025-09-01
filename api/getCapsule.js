@@ -5,21 +5,21 @@ const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req, res) {
-  let id;
+  let serialId;
   if (req.method === "GET") {
-    id = req.query.id;
+    serialId = req.query.serialId;
   } else if (req.method === "POST") {
-    id = req.body.id;
+    serialId = req.body.serialId;
   } else {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  if (!id) return res.status(400).json({ error: 'Missing capsule ID' });
+  if (!serialId) return res.status(400).json({ error: 'Missing capsule ID' });
 
   const { data, error } = await supabase
     .from('capsules')
     .select('encrypted_msg')
-    .eq('id', id)
+    .eq('serial_id', serialId) // serial_idで検索
     .single();
 
   if (error || !data) return res.status(404).json({ error: 'カプセルが見つかりません' });

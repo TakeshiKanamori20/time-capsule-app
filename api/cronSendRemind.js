@@ -22,10 +22,11 @@ export default async function handler(req, res) {
       await axios.post(process.env.SEND_EMAIL_API_URL, {
         email: capsule.email,
         encrypted: capsule.encrypted_msg,
-        unlockAt: Math.floor(new Date(capsule.unlock_time).getTime() / 1000), // ←ここで秒に変換
+        unlockAt: Math.floor(new Date(capsule.unlock_time).getTime() / 1000),
         txUrl: capsule.tx_url,
-        capsuleId: capsule.id,
+        serialId: capsule.serial_id // serial_idを渡す
       });
+
       await supabase
         .from('capsules')
         .update({ sent: true })

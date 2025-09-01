@@ -140,11 +140,11 @@ form.onsubmit = async (e) => {
     statusDiv.textContent = "刻印しました。メールをご確認ください";
     const txUrl = explorerUrls[chain] + tx.hash;
     txLinkDiv.innerHTML = `<a href="${txUrl}" target="_blank">取引を見る</a>`;
-    // メール送信（暗号化メッセージ送信＋カプセルID送信）
+    // メール送信（serial_idを渡す）
     await fetch("/api/sendEmail", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, encrypted, unlockAt, txUrl, capsuleId })
+      body: JSON.stringify({ email, encrypted, unlockAt, txUrl, serialId: result.serial_id }) // ←serial_idを渡す
     });
     // 完了メッセージ表示（SPA画面切り替えは行わない）
     if (window.showCompletionMessage) window.showCompletionMessage();
@@ -156,17 +156,21 @@ form.onsubmit = async (e) => {
 
   // カプセル復号処理
   document.getElementById("getBtn").onclick = async function() {
-    const capsuleId = document.getElementById("capsuleId").value;
+    const serialId = document.getElementById("capsuleId").value; // serial_idとして取得
     const password = document.getElementById("unlockPassword").value;
     const getResult = document.getElementById("getResult");
     getResult.textContent = "取得中...";
-    if (!capsuleId || !password) {
+    if (!serialId || !password) {
       getResult.textContent = "IDとパスワードを入力してください";
       return;
     }
     try {
-      // Supabaseからカプセル取得
-      const response = await fetch(`/api/getCapsule?id=${encodeURIComponent(capsuleId)}`);
+      // Supabaseからカプセル取得（serial_idで検索）
+      const response = await fetch('/api/getCapsule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ serialId, password })
+      });
       const result = await response.json();
       if (!response.ok || !result || !result.encrypted_msg) {
         getResult.textContent = result.error || "カプセルが見つかりません";
