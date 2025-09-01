@@ -6,8 +6,10 @@ export default async function handler(req, res) {
     res.status(405).end();
     return;
   }
+  console.log('Request body:', req.body); // ←ここでリクエスト内容を表示
   const { email, encrypted, unlockAt, txUrl, capsuleId } = req.body;
   if (!email || !encrypted || !unlockAt || !txUrl || !capsuleId) {
+    console.error('Missing fields:', { email, encrypted, unlockAt, txUrl, capsuleId }); // ←追加
     res.status(400).json({ error: "Missing fields" });
     return;
   }
