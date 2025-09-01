@@ -28,7 +28,10 @@ export default async function handler(req, res) {
         text: body
       })
     });
-    if (!resp.ok) throw new Error("Resend API error");
+    if (!resp.ok) {
+      const errorText = await resp.text(); // エラー詳細を取得
+      throw new Error("Resend API error: " + errorText);
+    }
     res.status(200).json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
