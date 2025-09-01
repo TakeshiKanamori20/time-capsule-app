@@ -22,8 +22,8 @@ export default async function handler(req, res) {
       await axios.post(process.env.SEND_EMAIL_API_URL, {
         email: capsule.email,
         encrypted: capsule.encrypted_msg,
-        unlockAt: capsule.unlock_time,
-        txUrl: capsule.tx_url, // 必要ならSupabaseに保存されている場合のみ
+        unlockAt: Math.floor(new Date(capsule.unlock_time).getTime() / 1000), // ←ここで秒に変換
+        txUrl: capsule.tx_url,
         capsuleId: capsule.id,
       });
       await supabase
