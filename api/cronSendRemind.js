@@ -1,11 +1,11 @@
-const { createClient } = require('@supabase/supabase-js');
-const axios = require('axios'); // sendEmail API呼び出し用
+import { createClient } from '@supabase/supabase-js';
+import axios from 'axios';
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // 1. unlockTime到達カプセル取得
   const { data, error } = await supabase
     .from('capsules')
@@ -14,6 +14,7 @@ module.exports = async (req, res) => {
     .lte('unlock_time', new Date().toISOString());
 
   if (error) return res.status(500).json({ error: error.message });
+  if (!data || data.length === 0) return res.status(200).json({ message: 'No capsules to process' });
 
   // 2. メール送信＆sent更新
   for (const capsule of data) {
@@ -35,4 +36,4 @@ module.exports = async (req, res) => {
   }
 
   return res.status(200).json({ message: 'Remind process finished' });
-};
+}

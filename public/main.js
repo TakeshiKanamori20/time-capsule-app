@@ -153,3 +153,35 @@ form.onsubmit = async (e) => {
   }
   submitBtn.disabled = false;
 };
+
+  // カプセル復号処理
+  document.getElementById("getBtn").onclick = async function() {
+    const capsuleId = document.getElementById("capsuleId").value;
+    const password = document.getElementById("unlockPassword").value;
+    const getResult = document.getElementById("getResult");
+    getResult.textContent = "取得中...";
+    if (!capsuleId || !password) {
+      getResult.textContent = "IDとパスワードを入力してください";
+      return;
+    }
+    try {
+      // Supabaseからカプセル取得
+      const response = await fetch(`/api/getCapsule?id=${encodeURIComponent(capsuleId)}`);
+      const result = await response.json();
+      if (!response.ok || !result || !result.encrypted_msg) {
+        getResult.textContent = result.error || "カプセルが見つかりません";
+        return;
+      }
+      // 復号
+      let decrypted = "";
+      try {
+        const bytes = CryptoJS.AES.decrypt(result.encrypted_msg, password);
+        decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      } catch (e) {
+        decrypted = "復号に失敗しました";
+      }
+      getResult.textContent = decrypted ? `復元メッセージ: ${decrypted}` : "パスワードが違うか、復号できません";
+    } catch (err) {
+      getResult.textContent = "エラー: " + (err.message || err);
+    }
+  };
