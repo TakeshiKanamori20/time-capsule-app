@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        from: "timecapsule@yourdomain.com",
+        from: "takeshi.kanamori@tkocean.net", // ←送り元アドレスを修正
         to: email,
         subject,
         text: body
