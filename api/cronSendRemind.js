@@ -23,8 +23,8 @@ export default async function handler(req, res) {
         email: capsule.email,
         encrypted: capsule.encrypted_msg,
         unlockAt: Math.floor(new Date(capsule.unlock_time).getTime() / 1000),
-        txUrl: capsule.tx_url,
-        serialId: capsule.serial_id // serial_idを渡す
+        txUrl: capsule.tx_url || "N/A", // txUrlが無い場合はダミー値
+        serialId: capsule.serial_id
       });
 
       await supabase

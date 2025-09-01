@@ -126,10 +126,11 @@ form.onsubmit = async (e) => {
     }
       // 例: カプセル作成時にSupabaseへ保存
       const capsule = {
-        id: capsuleId, // UUID
+        id: capsuleId,
         email: email,
-        unlock_time: unlockAt, // ISO文字列
+        unlock_time: unlockAt,
         encrypted_msg: encrypted,
+        txUrl: txUrl || "N/A" // txUrlが無い場合はダミー値
       };
       const result = await saveCapsuleToSupabase(capsule);
       if (!result || result.error) {

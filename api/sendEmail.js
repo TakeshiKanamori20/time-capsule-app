@@ -8,13 +8,12 @@ export default async function handler(req, res) {
   }
   console.log('Request body:', req.body);
   const { email, encrypted, unlockAt, txUrl, serialId } = req.body;
-  if (!email || !encrypted || !unlockAt || !txUrl || !serialId) {
-    console.error('Missing fields:', { email, encrypted, unlockAt, txUrl, serialId });
+  if (!email || !encrypted || !unlockAt || !serialId) { // txUrlは必須から外す
     res.status(400).json({ error: "Missing fields" });
     return;
   }
   const subject = `Time Capsule: ${new Date(unlockAt * 1000).toLocaleDateString()}に開封予定`;
-  const body = `あなたの手紙の控えです\n\nカプセルID: ${serialId}（復元時に必須です。必ず保管してください）\n暗号化メッセージ: ${encrypted}\n\n解錠予定: ${new Date(unlockAt * 1000).toLocaleString()}\nTx: ${txUrl}`;
+  const body = `あなたの手紙の控えです\n\nカプセルID: ${serialId}\n暗号化メッセージ: ${encrypted}\n\n解錠予定: ${new Date(unlockAt * 1000).toLocaleString()}\nTx: ${txUrl || "N/A"}`;
   try {
     const resp = await fetch("https://api.resend.com/emails", {
       method: "POST",

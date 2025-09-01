@@ -16,15 +16,13 @@ module.exports = async (req, res) => {
 
     const { error } = await supabase
       .from('capsules')
-      .insert([
-        {
-          email,
-          unlock_time: new Date(unlock_time * 1000).toISOString(),
-          encrypted_msg,
-          sent: false,
-          created_at: new Date().toISOString(),
-        },
-      ]);
+      .insert({
+        id: req.body.id,
+        email: req.body.email,
+        unlock_time: req.body.unlock_time,
+        encrypted_msg: req.body.encrypted_msg,
+        tx_url: req.body.txUrl || "N/A" // txUrlが無い場合はダミー値
+      });
 
     if (error) {
       console.error('Supabase insert error:', error);
